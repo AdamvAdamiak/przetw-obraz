@@ -25,19 +25,26 @@ import os
 
 def learn_digits():
     def load_data():
-        data = np.ones((1016,16384))
+        X = np.ones((10160,16384))
+        y = np.zeros(10160)
         for d in digits:
             filenames = os.listdir('digits/' + str(d))
-            for name in filenames:
-                img = Image.open("digits/" + str(d) + "/" + name) # This returns an image object   
+            L = len(filenames)
+            for i in range(L):
+                name = filenames[i]
+                y[i+d*1016] = d
+                img = Image.open("digits/" + str(d) + "/" + name) # This returns an image object
                 img = np.asarray(img) # convert it to ndarray
                 img = img.reshape(-1, img.size)
-                data[d,:] = img
-        return data   
+                X[i+d*1016,:] = img
+        return X, y
 
     digits = [0,1,2,3,4,5,6,7,8,9]
     data = load_data()
     print(data)
+
+    X_train, X_test, y_train, y_test = train_test_split(data[0], data[1], test_size=0.33, random_state=42)
+
 
 if __name__ == '__main__':
     learn_digits()
