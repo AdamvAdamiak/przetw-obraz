@@ -20,32 +20,34 @@ from PIL import Image
 import numpy as np
 import os
 
+import string
+
 
 
 
 
 def learn_digits():
-    def load_data(s=8):
-        X = np.ones((10160,s*s))
-        y = np.zeros(10160)
-        for d in digits:
-            filenames = os.listdir('digits/' + str(d))
-            L = len(filenames)
-            for i in range(L):
-                name = filenames[i]
-                y[i+d*1016] = d
-                img = Image.open("digits/" + str(d) + "/" + name) # This returns an image object
-                img = img.resize((s,s))
-                img = np.asarray(img) # convert it to ndarray
-                img = img.reshape(-1, img.size)
-                X[i+d*1016,:] = img
-        return X, y
+    def load_data():
+        pass
+        # X = np.ones((10160,s*s))
+        # y = np.zeros(10160)
+        # for digit in digits:
+        #     filenames = os.listdir('digits/' + str(digit))
+        #     L = len(filenames)
+        #     for i in range(L):
+        #         name = filenames[i]
+        #         y[i+d*1016] = digit
+        #         img = Image.open("digits/" + str(digit) + "/" + name) # This returns an image object
+        #         img = img.resize((s,s))
+        #         img = np.asarray(img) # convert it to ndarray
+        #         img = img.reshape(-1, img.size)
+        #         X[i+digit*1016,:] = img
+        # return X, y
 
-    digits = [0,1,2,3,4,5,6,7,8,9]
-    data = load_data()
+    classes_balanced = ['0','1','2','3','4','5','6','7','8','9']
     print(data)
 
-    X_train, X_test, y_train, y_test = train_test_split(data[0], data[1], test_size=0.33, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(data[0], data[1], test_size=0.3, random_state=42)
 
     def classify_digits(X_train = X_train, X_test= X_test, y_train = y_train, y_test = y_test):
         clf = DecisionTreeClassifier()
@@ -60,5 +62,20 @@ def learn_digits():
 
     classify_digits()
 
+def learn_letters():
+    letters_up = list(string.ascii_uppercase)
+    letters_low = list(string.ascii_lowercase)
+
+    for letter in letters_up:
+        filenames = os.listdir('letters/' + str(letter))
+        L = len(filenames)
+        print(filenames)
 if __name__ == '__main__':
-    learn_digits()
+    data = pd.read_csv("EMNIST/emnist-balanced-train.csv")
+    for i in range(0, 10):
+        digit = list(data.loc[i])
+        print(digit[0])
+        img = np.array(digit[1:])
+        img.resize((28,28))
+        img = Image.fromarray(img)
+        img.show()
