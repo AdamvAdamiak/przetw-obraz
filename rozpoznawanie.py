@@ -26,20 +26,6 @@ from time import time
 
 
 def learn_digits():
-    def load_data(path): #returns data as np.array
-        data = pd.read_csv(path)
-        data = np.array(data)
-        return data
-
-    train = load_data("EMNIST/emnist-byclass-train.csv")
-    X_train = train[:, 1:]
-    y_train = train[:, 0]
-    test = load_data("EMNIST/emnist-byclass-test.csv")
-    X_test = test[:, 1:]
-    y_test = test[:, 0]
-
-    #classes_balanced = ['0','1','2','3','4','5','6','7','8','9']
-
 
     def classify_digits(X_train = X_train, X_test= X_test, y_train = y_train, y_test = y_test):
         clf = DecisionTreeClassifier()
@@ -50,12 +36,16 @@ def learn_digits():
         for i in range(len(X_test)):
             if p[i] == y_test[i]:
                 count += 1
-        print(count/len(X_test))
 
-    classify_digits()
+
+
+class Letter_prediction():
+    def __init__(self, model):
+        self.clf = model
+
+    def predict(self, img):
+        return self.clf.predict(img)
 
 
 if __name__ == '__main__':
-    start_time = time()
-    learn_digits()
-    print("--- %s seconds ---" % (time() - start_time))
+
