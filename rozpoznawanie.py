@@ -19,29 +19,32 @@ from matplotlib.pyplot import imread
 from PIL import Image
 import numpy as np
 import os
-import string
-from time import time
-
-
 
 
 def learn_digits():
-    def load_data(path): #returns data as np.array
-        data = pd.read_csv(path)
-        data = np.array(data)
-        return data
 
-    train = load_data("EMNIST/emnist-byclass-train.csv")
-    X_train = train[:, 1:]
-    y_train = train[:, 0]
-    test = load_data("EMNIST/emnist-byclass-test.csv")
-    X_test = test[:, 1:]
-    y_test = test[:, 0]
+    def load_data(size=784):
+        digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        X = []
+        y = []
+        f = pd.read_csv('letters/emnist-balanced-train.csv', sep=',')
+        data = f.values.tolist()
 
-    #classes_balanced = ['0','1','2','3','4','5','6','7','8','9']
+        for row in data:
+            id = int(row.pop(0))
+            if id in digits:
+                row = np.array(row)
+                X.append(row)
+                y.append(id)
 
+        return X, y
 
-    def classify_digits(X_train = X_train, X_test= X_test, y_train = y_train, y_test = y_test):
+    X, y = load_data()
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.33, random_state=42)
+
+    def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
         clf = DecisionTreeClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
@@ -50,12 +53,42 @@ def learn_digits():
         for i in range(len(X_test)):
             if p[i] == y_test[i]:
                 count += 1
-        print(count/len(X_test))
+        print('Dokładność modelu: ', count/len(X_test))
+        return clf
 
-    classify_digits()
+    return classify_digits()
+
+def load_image(name, s):
+    # print(s)
+    img = Image.open(name)
+    img = img.resize((s, s))
+    img = img.transpose(Image.ROTATE_270)
+    img.show()
+    img = np.asarray(img)
+    img = img.reshape(-1, s*s)
+    # print(s, img.size)
+    return img
+
+
+class Digit_prediction():
+    def __init__(self, model):
+        self.clf = model
+
+    def predict(self, img):
+        return self.clf.predict(img)
+
+
+class Letter_prediction():
+    def __init__(self, model):
+        self.clf = model
+
+    def predict(self, img):
+        return self.clf.predict(img)
 
 
 if __name__ == '__main__':
-    start_time = time()
+    digit_predict = Digit_prediction(model=learn_digits())
+    img = load_image('img.png', 28)
+
+    print(digit_predict.predict(img))
     learn_digits()
-    print("--- %s seconds ---" % (time() - start_time))
