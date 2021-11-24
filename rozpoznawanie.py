@@ -30,6 +30,7 @@ def learn_digits():
         f = pd.read_csv('letters/emnist-balanced-train.csv', sep=',')
         data = f.values.tolist()
 
+<<<<<<< HEAD
         for row in data:
             id = int(row.pop(0))
             if id in digits:
@@ -43,6 +44,9 @@ def learn_digits():
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.33, random_state=42)
+=======
+def learn_digits():
+>>>>>>> fb2345d6f2886089daaf2edc43a7fbb022e0dce7
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
         clf = DecisionTreeClassifier()
@@ -53,6 +57,7 @@ def learn_digits():
         for i in range(len(X_test)):
             if p[i] == y_test[i]:
                 count += 1
+<<<<<<< HEAD
         print('Dokładność modelu: ', count/len(X_test))
         return clf
 
@@ -76,6 +81,9 @@ class Digit_prediction():
 
     def predict(self, img):
         return self.clf.predict(img)
+=======
+
+>>>>>>> fb2345d6f2886089daaf2edc43a7fbb022e0dce7
 
 
 class Letter_prediction():
@@ -87,8 +95,12 @@ class Letter_prediction():
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     digit_predict = Digit_prediction(model=learn_digits())
     img = load_image('img.png', 28)
 
     print(digit_predict.predict(img))
     learn_digits()
+=======
+
+>>>>>>> fb2345d6f2886089daaf2edc43a7fbb022e0dce7
