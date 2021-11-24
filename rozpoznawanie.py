@@ -22,28 +22,27 @@ import os
 
 
 def learn_digits():
-    def load_data(s=8):
-        X = np.ones((10160, s*s))
-        y = np.zeros(10160)
-        for d in digits:
-            filenames = os.listdir('digits/' + str(d))
-            L = len(filenames)
-            for i in range(L):
-                name = filenames[i]
-                y[i+d*1016] = d
-                # This returns an image object
-                img = Image.open("digits/" + str(d) + "/" + name)
-                img = img.resize((s, s))
-                img = np.asarray(img)  # convert it to ndarray
-                img = img.reshape(-1, img.size)
-                X[i+d*1016, :] = img
+
+    def load_data(size=784):
+        digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        X = []
+        y = []
+        f = pd.read_csv('letters/emnist-balanced-train.csv', sep=',')
+        data = f.values.tolist()
+
+        for row in data:
+            id = int(row.pop(0))
+            if id in digits:
+                row = np.array(row)
+                X.append(row)
+                y.append(id)
+
         return X, y
 
-    digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    data = load_data()
+    X, y = load_data()
 
     X_train, X_test, y_train, y_test = train_test_split(
-        data[0], data[1], test_size=0.33, random_state=42)
+        X, y, test_size=0.33, random_state=42)
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
         clf = DecisionTreeClassifier()
@@ -59,12 +58,13 @@ def learn_digits():
 
     return classify_digits()
 
-
 def load_image(name, s):
+    print(s)
     img = Image.open(name)
     img = img.resize((s, s))
     img = np.asarray(img)
-    img = img.reshape(-1, img.size)
+    img = img.reshape(-1, s*s)
+    print(s, img.size)
     return img
 
 
@@ -76,8 +76,17 @@ class Digit_prediction():
         return self.clf.predict(img)
 
 
-if __name__ == '__main__':
-    digit_predict = Digit_prediction(model=learn_digits())
-    img = load_image('img.png', 8)
+class Letter_prediction():
+    def __init__(self, model):
+        self.clf = model
 
-    print(digit_predict.predict(img))
+    def predict(self, img):
+        return self.clf.predict(img)
+
+
+if __name__ == '__main__':
+    # digit_predict = Digit_prediction(model=learn_digits())
+    # img = load_image('img2.png', 28)
+
+    # print(digit_predict.predict(img))
+    learn_digits()
