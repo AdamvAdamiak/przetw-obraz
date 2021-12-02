@@ -19,7 +19,8 @@ from matplotlib.pyplot import imread
 from PIL import Image
 import numpy as np
 import os
-
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 def learn_digits():
 
@@ -47,7 +48,7 @@ def learn_digits():
 
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = DecisionTreeClassifier()
+        clf = KNeighborsClassifier()#DecisionTreeClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -63,12 +64,12 @@ def learn_digits():
 
 def learn_letters():
 
-    def load_data(size=784):
+    def load_data(path,size=784):
 
         letters_id = range(10,47)
         X = []
         y = []
-        f = pd.read_csv('letters/emnist-balanced-train.csv', sep=',')
+        f = pd.read_csv(path, sep=',')
         data = f.values.tolist()
 
 
@@ -81,14 +82,12 @@ def learn_letters():
 
         return X, y
 
-    X, y = load_data()
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.33, random_state=42)
+    X_train, y_train = load_data('letters/emnist-balanced-train.csv')
+    X_test, y_test= load_data('letters/emnist-balanced-test.csv')
 
 
-    def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = DecisionTreeClassifier()
+    def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
+        clf = KNeighborsClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -102,7 +101,7 @@ def learn_letters():
 
 
 
-    return classify_digits()
+    return classify_letters()
 
 def load_image(name, s):
     # print(s)
@@ -116,7 +115,7 @@ def load_image(name, s):
     return img
 
 def id_toletter(id):
-    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+    letters = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
                'U', 'V', 'W', 'X', 'Y', 'Z',
                'a', 'b', 'd', 'e', 'f', 'g', 'h', 'n', 'q', 'r', 't']
     letters_id = range(10, 47)
@@ -146,13 +145,13 @@ class Letter_prediction():
 
 
 if __name__ == '__main__':
-    # digit_predict = Digit_prediction(model=learn_digits())
-    # img = load_image('img.png', 28)
-    #
-    # print(digit_predict.predict(img))
+    digit_predict = Digit_prediction(model=learn_digits())
+    img = load_image('img21.png', 28)
 
-    letter_predict = Letter_prediction(model=learn_letters())
-    img = load_image('img4.png', 28)
-    prediction = letter_predict.predict(img)
-    print(prediction)
-    print(id_toletter(prediction))
+    print(digit_predict.predict(img))
+
+    # letter_predict = Letter_prediction(model=learn_letters())
+    # img = load_image('img4.png', 28)
+    # prediction = letter_predict.predict(img)
+    # print(prediction)
+    # print(id_toletter(prediction))
