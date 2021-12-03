@@ -22,34 +22,31 @@ import os
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.neighbors import KNeighborsClassifier
 
+
 def learn_digits():
 
-    def load_data(path,size=784):
+    def load_data(path, size=784):
 
-            digits = [0,1,2,3,4,5,6,7,8,9]
-            X = []
-            y = []
-            f = pd.read_csv(path, sep=',')
-            data = f.values.tolist()
+        digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        X = []
+        y = []
+        f = pd.read_csv(path, sep=',')
+        data = f.values.tolist()
 
+        for row in data:
+            id = int(row.pop(0))
+            if id in digits:
+                row = np.array(row)
+                X.append(row)
+                y.append(id)
 
-            for row in data:
-                id = int(row.pop(0))
-                if id in digits:
-                    row = np.array(row)
-                    X.append(row)
-                    y.append(id)
-
-            return X, y
+        return X, y
 
     X_train, y_train = load_data('letters/emnist-balanced-train.csv')
-    print(X_train[0].size)
-    print(X_train[0].shape)
-    X_test, y_test= load_data('letters/emnist-balanced-test.csv')
-
+    X_test, y_test = load_data('letters/emnist-balanced-test.csv')
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = KNeighborsClassifier()#DecisionTreeClassifier()
+        clf = KNeighborsClassifier()  # DecisionTreeClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -62,17 +59,17 @@ def learn_digits():
         return clf
 
     return classify_digits()
-    
+
+
 def learn_letters():
 
-    def load_data(path,size=784):
+    def load_data(path, size=784):
 
-        letters_id = range(10,47)
+        letters_id = range(10, 47)
         X = []
         y = []
         f = pd.read_csv(path, sep=',')
         data = f.values.tolist()
-
 
         for row in data:
             id = int(row.pop(0))
@@ -84,8 +81,7 @@ def learn_letters():
         return X, y
 
     X_train, y_train = load_data('letters/emnist-balanced-train.csv')
-    X_test, y_test= load_data('letters/emnist-balanced-test.csv')
-
+    X_test, y_test = load_data('letters/emnist-balanced-test.csv')
 
     def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
         clf = KNeighborsClassifier()
@@ -100,29 +96,28 @@ def learn_letters():
         print('Dokładność modelu: ', count/len(X_test))
         return clf
 
-
-
     return classify_letters()
+
 
 def load_image(name, s):
     # print(s)
-    img = Image.open(name)
+    img = Image.open(name).convert('L')
     img = img.resize((s, s))
     img = img.transpose(Image.ROTATE_270)
-    img.show()
     img = np.asarray(img)
     img = img.reshape(-1, s*s)
     # print(s, img.size)
     return img
 
+
 def id_toletter(id):
-    letters = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+    letters = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
                'U', 'V', 'W', 'X', 'Y', 'Z',
                'a', 'b', 'd', 'e', 'f', 'g', 'h', 'n', 'q', 'r', 't']
     letters_id = range(10, 47)
     output_letters = []
     for i in id:
-        for j in range(0,len(letters_id)):
+        for j in range(0, len(letters_id)):
             if i == letters_id[j]:
                 output_letters.append(letters[j])
     return output_letters
@@ -136,7 +131,6 @@ class Digit_prediction():
         return self.clf.predict(img)
 
 
-
 class Letter_prediction():
     def __init__(self, model):
         self.clf = model
@@ -147,8 +141,7 @@ class Letter_prediction():
 
 if __name__ == '__main__':
     digit_predict = Digit_prediction(model=learn_digits())
-    img = load_image('img21.png', 28)
-
+    img = load_image('img3.png', 28)
     print(digit_predict.predict(img))
 
     # letter_predict = Letter_prediction(model=learn_letters())
