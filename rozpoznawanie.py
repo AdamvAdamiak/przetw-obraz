@@ -24,27 +24,28 @@ from sklearn.neighbors import KNeighborsClassifier
 
 def learn_digits():
 
-    def load_data(size=784):
-        digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        X = []
-        y = []
-        f = pd.read_csv('letters/emnist-balanced-train.csv', sep=',')
-        data = f.values.tolist()
+    def load_data(path,size=784):
+
+            digits = [0,1,2,3,4,5,6,7,8,9]
+            X = []
+            y = []
+            f = pd.read_csv(path, sep=',')
+            data = f.values.tolist()
 
 
-        for row in data:
-            id = int(row.pop(0))
-            if id in digits:
-                row = np.array(row)
-                X.append(row)
-                y.append(id)
+            for row in data:
+                id = int(row.pop(0))
+                if id in digits:
+                    row = np.array(row)
+                    X.append(row)
+                    y.append(id)
 
-        return X, y
+            return X, y
 
-    X, y = load_data()
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.33, random_state=42)
+    X_train, y_train = load_data('letters/emnist-balanced-train.csv')
+    print(X_train[0].size)
+    print(X_train[0].shape)
+    X_test, y_test= load_data('letters/emnist-balanced-test.csv')
 
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
@@ -61,7 +62,7 @@ def learn_digits():
         return clf
 
     return classify_digits()
-
+    
 def learn_letters():
 
     def load_data(path,size=784):
