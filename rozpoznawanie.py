@@ -39,11 +39,22 @@ def learn_digits():
                 row = np.array(row)
                 X.append(row)
                 y.append(id)
-
+        X = np.array(X)
+        y = np.array(y)
         return X, y
 
-    X_train, y_train = load_data('letters/emnist-balanced-train.csv')
-    X_test, y_test = load_data('letters/emnist-balanced-test.csv')
+    # X_train, y_train = load_data('letters/emnist-balanced-train.csv')
+    # np.save('X_train', X_train)
+    # np.save('y_train', y_train)
+    # X_test, y_test = load_data('letters/emnist-balanced-test.csv')
+    # np.save('X_test', X_test)
+    # np.save('y_test', y_test)
+
+    X_train = np.load('X_train.npy')
+    y_train = np.load('y_train.npy')
+    X_test = np.load('X_test.npy')
+    y_test = np.load('y_test.npy')
+
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
         clf = KNeighborsClassifier()  # DecisionTreeClassifier()
