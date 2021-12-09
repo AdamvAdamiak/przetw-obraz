@@ -55,7 +55,6 @@ def learn_digits():
     X_test = np.load('X_test.npy')
     y_test = np.load('y_test.npy')
 
-
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
         clf = KNeighborsClassifier()  # DecisionTreeClassifier()
         clf.fit(X_train, y_train)
@@ -69,7 +68,9 @@ def learn_digits():
         print('Dokładność modelu: ', count/len(X_test))
         return clf
 
-    return classify_digits()
+    clf = classify_digits()
+    analyse(clf, X_test, X_train, y_test, y_train)
+    return clf
 
 
 def learn_letters():
@@ -91,11 +92,20 @@ def learn_letters():
 
         return X, y
 
-    X_train, y_train = load_data('letters/emnist-balanced-train.csv')
-    X_test, y_test = load_data('letters/emnist-balanced-test.csv')
+    # X_train, y_train = load_data('letters/emnist-balanced-train.csv')
+    # np.save('X_trainl', X_train)
+    # np.save('y_trainl', y_train)
+    # X_test, y_test = load_data('letters/emnist-balanced-test.csv')
+    # np.save('X_testl', X_test)
+    # np.save('y_testl', y_test)
+
+    X_train = np.load('X_trainl.npy')
+    y_train = np.load('y_trainl.npy')
+    X_test = np.load('X_testl.npy')
+    y_test = np.load('y_testl.npy')
 
     def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = KNeighborsClassifier()
+        clf = MLPClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -107,7 +117,10 @@ def learn_letters():
         print('Dokładność modelu: ', count/len(X_test))
         return clf
 
-    return classify_letters()
+    clf = classify_letters()
+    # analyse(clf,X_test,X_train,y_test,y_train)
+    print('x')
+    return clf
 
 
 def load_image(name, s):
@@ -150,13 +163,17 @@ class Letter_prediction():
         return self.clf.predict(img)
 
 
+def analyse(model, X_test, X_train, y_test, y_train):
+    plot_confusion_matrix(model, X=X_test, y_true=y_test)
+    plt.show()
+
+
 if __name__ == '__main__':
     digit_predict = Digit_prediction(model=learn_digits())
     img = load_image('img3.png', 28)
     print(digit_predict.predict(img))
 
     # letter_predict = Letter_prediction(model=learn_letters())
-    # img = load_image('img4.png', 28)
+    # img = load_image('img3.png', 28)
     # prediction = letter_predict.predict(img)
-    # print(prediction)
     # print(id_toletter(prediction))
