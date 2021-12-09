@@ -69,7 +69,7 @@ def learn_digits():
         return clf
 
     clf = classify_digits()
-    analyse(clf, X_test, X_train, y_test, y_train)
+    # analyse(clf, X_test, X_train, y_test, y_train)
     return clf
 
 
@@ -170,7 +170,7 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 if __name__ == '__main__':
     digit_predict = Digit_prediction(model=learn_digits())
-    img = load_image('img3.png', 28)
+    img = load_image('test_digit/img0.png', 28)
     print(digit_predict.predict(img))
 
     # letter_predict = Letter_prediction(model=learn_letters())
