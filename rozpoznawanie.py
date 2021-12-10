@@ -179,18 +179,18 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 
 if __name__ == '__main__':
-  digit_predict = Digit_prediction(model=learn_digits())
-  img = load_image('test_digit/img3.png', 28)
-  img = grayscale_inversion(img)
-  print(digit_predict.predict(img))
+    digit_predict = Digit_prediction(model=learn_digits())
+    img = load_image('test_digit/img_test.png', 28)
+    img = grayscale_inversion(img)
+    print(digit_predict.predict(img))
 
     
-    for i in range(10):
-        path = f'test_digit/img{i}.png'
-        print(path)
-        digit_predict = Digit_prediction(model=learn_digits())
-        img = load_image(path, 28)
-        print(digit_predict.predict(img))
+    # for i in range(10):
+    #     path = f'test_digit/img{i}.png'
+    #     print(path)
+    #     digit_predict = Digit_prediction(model=learn_digits())
+    #     img = load_image(path, 28)
+    #     print(digit_predict.predict(img))
 
 
     # X_test = np.load('X_test.npy')
