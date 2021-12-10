@@ -127,6 +127,7 @@ def load_image(name, s):
     # print(s)
     img = Image.open(name).convert('L')
     img = img.resize((s, s))
+    img = img.transpose(Image.FLIP_TOP_BOTTOM)
     img = img.transpose(Image.ROTATE_270)
     img = np.asarray(img)
     img = img.reshape(-1, s*s)
@@ -169,10 +170,24 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 
 if __name__ == '__main__':
-    digit_predict = Digit_prediction(model=learn_digits())
-    img = load_image('test_digit/img0.png', 28)
-    print(digit_predict.predict(img))
 
+    for i in range(10):
+        path = f'test_digit/img{i}.png'
+        print(path)
+        digit_predict = Digit_prediction(model=learn_digits())
+        img = load_image(path, 28)
+        print(digit_predict.predict(img))
+
+
+    # X_test = np.load('X_test.npy')
+    # y_test = np.load('y_test.npy')
+
+    # for n in range(100):
+    #     img = X_test[n]
+    #     print(y_test[n])
+    #     img = img.reshape((28,28))
+    #     plt.imshow(img, cmap='gray', vmin=0, vmax=255)
+    #     plt.show()
     # letter_predict = Letter_prediction(model=learn_letters())
     # img = load_image('img3.png', 28)
     # prediction = letter_predict.predict(img)
