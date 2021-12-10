@@ -56,8 +56,28 @@ def learn_digits():
     X_test = np.load('X_test.npy')
     y_test = np.load('y_test.npy')
 
-    def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = KNeighborsClassifier(n_neighbors=3)  # DecisionTreeClassifier()
+    def create_valid(X, y, size=50):
+        X_valid = []
+        y_valid = []
+        num_list = [size]*10
+        for i in range(y.size):
+            digit = y[i]
+            if num_list[digit] != 0:
+                X_valid.append(X[i])
+                y_valid.append(y[i])
+                num_list[digit] -= 1
+            if num_list == [0]*10:
+                break
+        X_valid = np.array(X_valid)
+        y_valid = np.array(y_valid)
+        return X_valid, y_valid
+
+
+    X_valid, y_valid = create_valid(X_train, y_train)
+
+
+    def classify_digits(X_train=X_train, X_test=X_valid, y_train=y_train, y_test=y_valid):
+        clf = KNeighborsClassifier(n_neighbors=10)  # DecisionTreeClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -182,9 +202,9 @@ def analyse(model, X_test, X_train, y_test, y_train):
 if __name__ == '__main__':
     start = time()
     digit_predict = Digit_prediction(model=learn_digits())
-    img = load_image('test_digit/img_test.png', 28)
-    img = grayscale_inversion(img)
-    print(digit_predict.predict(img))
+    # img = load_image('test_digit/img_test.png', 28)
+    # img = grayscale_inversion(img)
+    # print(digit_predict.predict(img))
 
     
     # for i in range(10):
