@@ -1,3 +1,4 @@
+from time import time
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -179,6 +180,7 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 
 if __name__ == '__main__':
+    start = time()
     digit_predict = Digit_prediction(model=learn_digits())
     img = load_image('test_digit/img_test.png', 28)
     img = grayscale_inversion(img)
@@ -215,3 +217,5 @@ if __name__ == '__main__':
     # img = img.reshape((28,28))
     # plt.imshow(img, cmap='gray', vmin=0, vmax=255)
     # plt.show()
+
+    print(round(time()-start, 2), ' s')
