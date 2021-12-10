@@ -56,7 +56,7 @@ def learn_digits():
     y_test = np.load('y_test.npy')
 
     def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = KNeighborsClassifier()  # DecisionTreeClassifier()
+        clf = KNeighborsClassifier(n_neighbors=3)  # DecisionTreeClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -128,10 +128,19 @@ def load_image(name, s):
     img = Image.open(name).convert('L')
     img = img.resize((s, s))
     img = img.transpose(Image.ROTATE_270)
+    img = img.transpose(Image.FLIP_LEFT_RIGHT)
     img = np.asarray(img)
     img = img.reshape(-1, s*s)
-    # print(s, img.size)
     return img
+
+
+def grayscale_inversion(img): #get img as np.array with shape (1,784)
+    img_new = []
+    for i in range(784):
+        img_new.append(255 - img[0,i])
+    img_new = np.array(img_new)
+    img_new = img_new.reshape(-1, 784)
+    return img_new
 
 
 def id_toletter(id):
@@ -170,10 +179,20 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 if __name__ == '__main__':
     digit_predict = Digit_prediction(model=learn_digits())
-    img = load_image('test_digit/img0.png', 28)
+    img = load_image('test_digit/img_test.png', 28)
+    img = grayscale_inversion(img)
     print(digit_predict.predict(img))
 
     # letter_predict = Letter_prediction(model=learn_letters())
     # img = load_image('img3.png', 28)
     # prediction = letter_predict.predict(img)
     # print(id_toletter(prediction))
+
+    # X_test = np.load('X_test.npy')
+    # y_test = np.load('y_test.npy')
+    # n=9
+    # img = X_test[n]
+    # print(y_test[n])
+    # img = img.reshape((28,28))
+    # plt.imshow(img, cmap='gray', vmin=0, vmax=255)
+    # plt.show()
