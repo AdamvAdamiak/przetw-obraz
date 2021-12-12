@@ -75,6 +75,7 @@ def learn_letters():
     y_test = np.load('y_testl.npy')
 
     def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
+        clf = KNeighborsClassifier(n_neighbors=10)  # MLPClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -98,13 +99,14 @@ def load_image(name, s):
     img = img.transpose(Image.ROTATE_270)
     img = np.asarray(img)
     img = img.reshape(-1, s*s)
+    img = grayscale_inversion(img)
     return img
 
 
-def grayscale_inversion(img): #get img as np.array with shape (1,784)
+def grayscale_inversion(img):  # get img as np.array with shape (1,784)
     img_new = []
     for i in range(784):
-        img_new.append(255 - img[0,i])
+        img_new.append(255 - img[0, i])
     img_new = np.array(img_new)
     img_new = img_new.reshape(-1, 784)
     return img_new
