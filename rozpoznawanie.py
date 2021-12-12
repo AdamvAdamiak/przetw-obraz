@@ -113,6 +113,7 @@ def learn_letters():
 
         return X, y
 
+
     # X_train, y_train = load_data('letters/emnist-balanced-train.csv')
     # np.save('X_trainl', X_train)
     # np.save('y_trainl', y_train)
@@ -120,13 +121,15 @@ def learn_letters():
     # np.save('X_testl', X_test)
     # np.save('y_testl', y_test)
 
+
     X_train = np.load('X_trainl.npy')
     y_train = np.load('y_trainl.npy')
     X_test = np.load('X_testl.npy')
     y_test = np.load('y_testl.npy')
 
+
     def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = MLPClassifier()
+        clf = KNeighborsClassifier(n_neighbors=10)  #MLPClassifier()
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -150,7 +153,6 @@ def load_image(name, s):
     img = img.resize((s, s))
     img = img.transpose(Image.FLIP_TOP_BOTTOM)
     img = img.transpose(Image.ROTATE_270)
-    img = img.transpose(Image.FLIP_LEFT_RIGHT)
     img = np.asarray(img)
     img = img.reshape(-1, s*s)
     return img
@@ -166,16 +168,16 @@ def grayscale_inversion(img): #get img as np.array with shape (1,784)
 
 
 def id_toletter(id):
-    letters = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
                'U', 'V', 'W', 'X', 'Y', 'Z',
                'a', 'b', 'd', 'e', 'f', 'g', 'h', 'n', 'q', 'r', 't']
     letters_id = range(10, 47)
-    output_letters = []
+
     for i in id:
         for j in range(0, len(letters_id)):
             if i == letters_id[j]:
-                output_letters.append(letters[j])
-    return output_letters
+                output_letter = letters[j]
+    return output_letter
 
 
 class Digit_prediction():
@@ -201,10 +203,18 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 if __name__ == '__main__':
     start = time()
-    digit_predict = Digit_prediction(model=learn_digits())
+    # digit_predict = Digit_prediction(model=learn_digits())
     # img = load_image('test_digit/img_test.png', 28)
     # img = grayscale_inversion(img)
     # print(digit_predict.predict(img))
+
+    letter_predict = Letter_prediction(model=learn_letters())
+    for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T','U', 'V', 'W', 'X', 'Y', 'Z']:
+        img = load_image('test_letters/img{}.png'.format(letter), 28)
+        img = grayscale_inversion(img)
+        prediction = letter_predict.predict(img)
+        print(prediction)
+        print(id_toletter(prediction))
 
     
     # for i in range(10):

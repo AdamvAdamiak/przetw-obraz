@@ -5,3 +5,7 @@ X_testl.npy
 X_trainl.npy
 y_trainl.npy
 y_testl.npy
+X_test.npy
+X_train.npy
+y_train.npy
+y_test.npy
