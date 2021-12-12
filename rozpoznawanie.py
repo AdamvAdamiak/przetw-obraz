@@ -144,15 +144,27 @@ def analyse(model, X_test, X_train, y_test, y_train):
     plt.show()
 
 
-if __name__ == '__main__':
+def test_classifiers():
     start = time()
 
-    letter_predict = Letter_prediction(model=learn_letters())
-    for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T','U', 'V', 'W', 'X', 'Y', 'Z']:
-        img = load_image('test_letters/img{}.png'.format(letter), 28)
-        img = grayscale_inversion(img)
-        prediction = letter_predict.predict(img)
-        print(prediction)
-        print(id_toletter(prediction))
+    digit_predict = Digit_prediction(model=learn_digits())
+    for i in range(10):
+        path = f'test_digit/img{i}.png'
+        print(path)
+        img = load_image(path, 28)
+        print(digit_predict.predict(img))
 
-    
+    letter_predict = Letter_prediction(model=learn_letters())
+    for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']:
+        img = load_image('test_letters/img{}.png'.format(letter), 28)
+        prediction = letter_predict.predict(img)
+        if letter == id_toletter(prediction):
+            print(letter, ' success')
+        else:
+            print(letter, ' classified as ', id_toletter(prediction))
+
+    print(round(time()-start, 2), ' s')
+
+
+if __name__ == '__main__':
+    test_classifiers()
