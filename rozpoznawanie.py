@@ -71,8 +71,9 @@ def learn_digits(hyp_param):
     y_valid = np.load('y_valid.npy')
 
     def classify_digits(X_train=X_train, X_test=X_valid, y_train=y_train, y_test=y_valid):
-    #def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = MLPClassifier(hidden_layer_sizes=(hyp_param))  #KNeighborsClassifier(n_neighbors=5)   # #DecisionTreeClassifier()
+        # def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
+        # KNeighborsClassifier(n_neighbors=5)   # #DecisionTreeClassifier()
+        clf = MLPClassifier(hidden_layer_sizes=(hyp_param))
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -137,8 +138,9 @@ def learn_letters(hyp_param):
     y_valid = np.load('y_validl.npy')
 
     def classify_letters(X_train=X_train, X_test=X_valid, y_train=y_train, y_test=y_valid):
-    #def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
-        clf = MLPClassifier(hidden_layer_sizes=hyp_param)  #KNeighborsClassifier(n_neighbors=8), alpha=1, max_iter=1000)
+        # def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
+        # KNeighborsClassifier(n_neighbors=8), alpha=1, max_iter=1000)
+        clf = MLPClassifier(hidden_layer_sizes=hyp_param)
         clf.fit(X_train, y_train)
         p = clf.predict(X_test)
 
@@ -218,7 +220,7 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 def test_classifiers():
     start = time()
-    
+
     digit_predict = Digit_prediction()
     digit_predict.load_model()
     # digit_predict = Digit_prediction(model=learn_digits((100,)))
@@ -243,7 +245,44 @@ def test_classifiers():
 
     print(round(time()-start, 2), ' s')
 
+def validate_classifiers():
+    digit_classifier = Digit_prediction()
+    letter_classifier = Letter_prediction()
+
+    digit_classifier.load_model()
+    letter_classifier.load_model()
+
+    X_valid = np.load('X_valid.npy')
+    y_valid = np.load('y_valid.npy')
+
+    X_validl = np.load('X_validl.npy')
+    y_validl = np.load('y_validl.npy')
+
+    print('Cyfry:')
+    validate_model(digit_classifier,X_valid,y_valid)
+
+    print('')
+
+    print('Litery:')
+    validate_model(letter_classifier,X_validl,y_validl)
+
+def validate_model(model,X_valid,y_valid):
+    valid = 0
+    for x_data, y_data in zip(X_valid, y_valid):
+        x_data = x_data.reshape(1,784)
+        prediction = model.predict(x_data)
+        if prediction == y_data:
+            valid += 1
+
+    print('Dokładność modelu: ', valid/len(X_valid) * 100, '%')
+
 
 
 if __name__ == '__main__':
-    test_classifiers()
+    # test_classifiers()
+    validate_classifiers()
+    
+
+
+
+
