@@ -20,7 +20,7 @@ from PIL import Image
 import numpy as np
 import os
 from sklearn.gaussian_process import GaussianProcessClassifier
-
+import pickle
 
 
 def learn_digits(hyp_param):
@@ -60,15 +60,15 @@ def learn_digits(hyp_param):
 
         return X_valid, y_valid, X, y
 
-    X_valid, y_valid, X_train, y_train = create_valid(X_train, y_train)
+    # X_valid, y_valid, X_train, y_train = create_valid(X_train, y_train)
 
-    np.save('X_train.npy', X_train)
-    np.save('y_train.npy', y_train)
-    np.save('X_valid.npy', X_valid)
-    np.save('y_valid.npy', y_valid)
+    # np.save('X_train.npy', X_train)
+    # np.save('y_train.npy', y_train)
+    # np.save('X_valid.npy', X_valid)
+    # np.save('y_valid.npy', y_valid)
 
-    # X_valid = np.load('X_valid.npy')
-    # y_valid = np.load('y_valid.npy')
+    X_valid = np.load('X_valid.npy')
+    y_valid = np.load('y_valid.npy')
 
     def classify_digits(X_train=X_train, X_test=X_valid, y_train=y_train, y_test=y_valid):
     #def classify_digits(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
@@ -126,15 +126,15 @@ def learn_letters(hyp_param):
 
         return X_valid, y_valid, X, y
 
-    X_valid, y_valid, X_train, y_train =create_valid(X_train, y_train)
+    # X_valid, y_valid, X_train, y_train =create_valid(X_train, y_train)
 
-    np.save('X_trainl.npy', X_train)
-    np.save('y_trainl.npy', y_train)
-    np.save('X_validl.npy', X_valid)
-    np.save('y_validl.npy', y_valid)
+    # np.save('X_trainl.npy', X_train)
+    # np.save('y_trainl.npy', y_train)
+    # np.save('X_validl.npy', X_valid)
+    # np.save('y_validl.npy', y_valid)
 
-    # X_valid = np.load('X_validl.npy')
-    # y_valid = np.load('y_validl.npy')
+    X_valid = np.load('X_validl.npy')
+    y_valid = np.load('y_validl.npy')
 
     def classify_letters(X_train=X_train, X_test=X_valid, y_train=y_train, y_test=y_valid):
     #def classify_letters(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
@@ -188,19 +188,27 @@ def id_toletter(id):
 
 
 class Digit_prediction():
-    def __init__(self, model):
-        self.clf = model
 
     def predict(self, img):
         return self.clf.predict(img)
+
+    def save_model(self):
+        pickle.dump(self.clf, open('digit_classifier.sav', 'wb'))
+
+    def load_model(self):
+        self.clf = pickle.load(open('digit_classifier.sav', 'rb'))
 
 
 class Letter_prediction():
-    def __init__(self, model):
-        self.clf = model
 
     def predict(self, img):
         return self.clf.predict(img)
+
+    def save_model(self):
+        pickle.dump(self.clf, open('letter_classifier.sav', 'wb'))
+
+    def load_model(self):
+        self.clf = pickle.load(open('letter_classifier.sav', 'rb'))
 
 
 def analyse(model, X_test, X_train, y_test, y_train):
@@ -210,22 +218,28 @@ def analyse(model, X_test, X_train, y_test, y_train):
 
 def test_classifiers():
     start = time()
+    
+    digit_predict = Digit_prediction()
+    digit_predict.load_model()
+    # digit_predict = Digit_prediction(model=learn_digits((100,)))
+    # digit_predict.save_model()
+    for i in range(10):
+        path = f'test_digit/img{i}.png'
+        print(path)
+        img = load_image(path, 28)
+        print(digit_predict.predict(img))
 
-    digit_predict = Digit_prediction(model=learn_digits((100,)))
-    # for i in range(10):
-    #     path = f'test_digit/img{i}.png'
-    #     print(path)
-    #     img = load_image(path, 28)
-    #     print(digit_predict.predict(img))
-
-    letter_predict = Letter_prediction(model=learn_letters((260,)))
-    # for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']:
-    #     img = load_image('test_letters/img{}.png'.format(letter), 28)
-    #     prediction = letter_predict.predict(img)
-    #     if letter == id_toletter(prediction):
-    #         print(letter, ' success')
-    #     else:
-    #         print(letter, ' classified as ', id_toletter(prediction))
+    letter_predict = Letter_prediction()
+    letter_predict.load_model()
+    # letter_predict = Letter_prediction(model=learn_letters((260,)))
+    # letter_predict.save_model()
+    for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']:
+        img = load_image('test_letters/img{}.png'.format(letter), 28)
+        prediction = letter_predict.predict(img)
+        if letter == id_toletter(prediction):
+            print(letter, ' success')
+        else:
+            print(letter, ' classified as ', id_toletter(prediction))
 
     print(round(time()-start, 2), ' s')
 
