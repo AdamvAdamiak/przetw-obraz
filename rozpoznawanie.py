@@ -22,6 +22,7 @@ import os
 from sklearn.gaussian_process import GaussianProcessClassifier
 import pickle
 
+
 def learn_digits(hyp_param):
 
     X_train = np.load('X_train.npy')
@@ -252,14 +253,15 @@ def validate_model(model, X_valid, y_valid):
 
     print('Dokładność modelu: ', valid/len(X_valid) * 100, '%')
 
-def find_best_parameters(X_train,y_train):
-    mlp = MLPClassifier(max_iter=100)
+
+def find_best_parameters(X_train, y_train):
+    mlp = MLPClassifier(max_iter=260)
     parameter_space = {
-    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,)],
-    'activation': ['tanh', 'relu'],
-    'solver': ['sgd', 'adam'],
-    'alpha': [0.0001, 0.05],
-    'learning_rate': ['constant','adaptive'],}
+        'hidden_layer_sizes': [(260, 260, 260), (130, 260, 130), (260,)],
+        'activation': ['tanh', 'relu'],
+        'solver': ['sgd', 'adam'],
+        'alpha': [0.0001, 0.05],
+        'learning_rate': ['constant', 'adaptive'], }
     from sklearn.model_selection import GridSearchCV
 
     clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3)
@@ -273,6 +275,8 @@ def find_best_parameters(X_train,y_train):
     stds = clf.cv_results_['std_test_score']
     for mean, std, params in zip(means, stds, clf.cv_results_['params']):
         print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+
+
 if __name__ == '__main__':
     # test_classifiers()
     validate_classifiers()
@@ -283,12 +287,10 @@ if __name__ == '__main__':
     X_trainl = np.load('X_trainl.npy')
     y_trainl = np.load('y_trainl.npy')
 
-    print('Cyfry:')
-    find_best_parameters(X_train,y_train)
+    # print('Cyfry:')
+    # find_best_parameters(X_train,y_train)
 
     print('')
 
     print('Litery:')
-    find_best_parameters(X_trainl,y_trainl)
-
-    
+    find_best_parameters(X_trainl, y_trainl)
