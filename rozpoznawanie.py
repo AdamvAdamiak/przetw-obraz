@@ -137,7 +137,7 @@ def learn_letters(hyp_param):
     return clf
 
 
-def load_image(name, s):
+def load_image(name, s=28):
     img = Image.open(name).convert('L')
     img = img.resize((s, s))
     img = img.transpose(Image.FLIP_TOP_BOTTOM)
@@ -277,20 +277,14 @@ def find_best_parameters(X_train, y_train):
         print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
 
 
+def Digit_predict(img):
+    D_classifier = Digit_prediction()
+    D_classifier.load_model()
+
+    return D_classifier.predict(img)[0]
+
 if __name__ == '__main__':
-    # test_classifiers()
-    validate_classifiers()
+    img = load_image("test_digit/img5.png")
+    print(Digit_predict(img))
 
-    X_train = np.load('X_train.npy')
-    y_train = np.load('y_train.npy')
 
-    X_trainl = np.load('X_trainl.npy')
-    y_trainl = np.load('y_trainl.npy')
-
-    # print('Cyfry:')
-    # find_best_parameters(X_train,y_train)
-
-    print('')
-
-    print('Litery:')
-    find_best_parameters(X_trainl, y_trainl)
