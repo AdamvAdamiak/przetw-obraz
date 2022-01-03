@@ -169,6 +169,30 @@ def id_toletter(id):
     return output_letter
 
 
+def learn_objects(hyp_param = (100,)):
+
+    X_train = np.load('X_traino.npy')
+    y_train = np.load('y_traino.npy')
+    X_test = np.load('X_testo.npy')
+    y_test = np.load('y_testo.npy')
+
+    def classify_objects(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
+        clf = MLPClassifier(hidden_layer_sizes=(hyp_param))
+        clf.fit(X_train, y_train)
+        p = clf.predict(X_test)
+
+        count = 0
+        for i in range(len(X_test)):
+            if p[i] == y_test[i]:
+                count += 1
+
+        print('Dokładność modelu: ', round(count/len(X_test), 2))
+        return clf
+
+    clf = classify_objects()
+    return clf
+
+
 class Digit_prediction():
 
     def predict(self, img):
@@ -191,6 +215,8 @@ class Letter_prediction():
 
     def load_model(self):
         self.clf = pickle.load(open('letter_classifier.sav', 'rb'))
+
+
 
 
 def test_classifiers():
@@ -287,22 +313,8 @@ if __name__ == '__main__':
     # img = load_image("test_digit/img5.png")
     # print(Digit_predict(img))
 
-    X_valid = np.load('X_valid.npy')
-    y_valid = np.load('y_valid.npy')
+    print(learn_objects((28*28,)))
 
-    X_validl = np.load('X_validl.npy')
-    y_validl = np.load('y_validl.npy')
 
-    y_valid = np.zeros(y_valid.shape)
-    y_validl = np.ones(y_validl.shape)
-
-    X_object = np.concatenate((X_valid, X_validl))
-    y_object = np.concatenate((y_valid, y_validl))
-    X_traino, X_testo, y_traino, y_testo = train_test_split(X_object, y_object, test_size=0.2)
-
-    np.save('X_traino.npy', X_traino)
-    np.save('X_testo.npy', X_testo)
-    np.save('y_traino.npy', y_traino)
-    np.save('y_testo.npy', y_testo)
 
 
