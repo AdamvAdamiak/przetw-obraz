@@ -284,7 +284,25 @@ def Digit_predict(img):
     return D_classifier.predict(img)[0]
 
 if __name__ == '__main__':
-    img = load_image("test_digit/img5.png")
-    print(Digit_predict(img))
+    # img = load_image("test_digit/img5.png")
+    # print(Digit_predict(img))
+
+    X_valid = np.load('X_valid.npy')
+    y_valid = np.load('y_valid.npy')
+
+    X_validl = np.load('X_validl.npy')
+    y_validl = np.load('y_validl.npy')
+
+    y_valid = np.zeros(y_valid.shape)
+    y_validl = np.ones(y_validl.shape)
+
+    X_object = np.concatenate((X_valid, X_validl))
+    y_object = np.concatenate((y_valid, y_validl))
+    X_traino, X_testo, y_traino, y_testo = train_test_split(X_object, y_object, test_size=0.2)
+
+    np.save('X_traino.npy', X_traino)
+    np.save('X_testo.npy', X_testo)
+    np.save('y_traino.npy', y_traino)
+    np.save('y_testo.npy', y_testo)
 
 
