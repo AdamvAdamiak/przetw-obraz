@@ -313,7 +313,7 @@ if __name__ == '__main__':
     # img = load_image("test_digit/img5.png")
     # print(Digit_predict(img))
 
-    print(learn_objects((28*28,)))
+
 
 
 
