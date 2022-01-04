@@ -217,6 +217,16 @@ class Letter_prediction():
         self.clf = pickle.load(open('letter_classifier.sav', 'rb'))
 
 
+class Object_prediction():
+
+    def predict(self, img):
+        return self.clf.predict(img)
+
+    def save_model(self):
+        pickle.dump(self.clf, open('object_classifier.sav', 'wb'))
+
+    def load_model(self):
+        self.clf = pickle.load(open('object_classifier.sav', 'rb'))
 
 
 def test_classifiers():
@@ -309,12 +319,32 @@ def Digit_predict(img):
 
     return D_classifier.predict(img)[0]
 
+def Letter_predict(img):
+    L_classifier = Letter_prediction()
+    L_classifier.load_model()
+
+    return L_classifier.predict(img)[0]
+
+def Object_predict():
+    object_predict = Object_prediction()
+    object_predict.load_model()
+
+    #img = load_image('test_digit/img2.png')
+    img = load_image('test_letters/imgF.png')
+    prediction = object_predict.predict(img)
+
+    if prediction == 0.:
+        return Digit_predict(img)
+
+    elif prediction == 1:
+        return id_toletter([Letter_predict(img)])
+
 if __name__ == '__main__':
     img = load_image("test_digit/img4.png")
     print(Digit_predict(img))
 
 
-
+    print(Object_predict())
 
 
 
