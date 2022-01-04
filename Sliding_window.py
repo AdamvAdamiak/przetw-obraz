@@ -10,6 +10,7 @@ import time
 import cv2
 import warnings
 warnings.filterwarnings('ignore')
+from collections import Counter
 
 def load_image(img):
     img = img.transpose(Image.FLIP_TOP_BOTTOM)
@@ -47,14 +48,17 @@ def predict_image(name):
             window = Image.fromarray(window)
             window = window.resize(size=(28,28))
             window = load_image(window)
+            window_list = list(window[0])
+            counts = window_list.count(0)
+            if counts < 700:
             # window = np.array(window)
             # window = window.reshape(1,784)
-            result += str(Digit_predict(window))
+              result += str(Digit_predict(window))
             clone = resized.copy()
             cv2.rectangle(clone, (x, y), (x + winW, y + winH), (0, 255, 0), 2)
             cv2.imshow("Window", clone)
             cv2.waitKey(1)
-            time.sleep(0.5)
+            time.sleep(0.025)
     return result
 
 
