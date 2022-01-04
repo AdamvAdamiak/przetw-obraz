@@ -19,6 +19,9 @@ def sliding_window(image, stepSize, windowSize):
 
 img = load_image("img0.png")
 
-windows = sliding_window(img, 4, (5,5))
+windows = sliding_window(img, 5, (28,28))
 for window in windows:
-    print(Digit_predict(window))
+    window = np.array(window)
+    window = window.reshape((28,28))
+    print(window)
+    #print(Digit_predict(window))

@@ -169,6 +169,30 @@ def id_toletter(id):
     return output_letter
 
 
+def learn_objects(hyp_param = (100,)):
+
+    X_train = np.load('X_traino.npy')
+    y_train = np.load('y_traino.npy')
+    X_test = np.load('X_testo.npy')
+    y_test = np.load('y_testo.npy')
+
+    def classify_objects(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test):
+        clf = MLPClassifier(hidden_layer_sizes=(hyp_param))
+        clf.fit(X_train, y_train)
+        p = clf.predict(X_test)
+
+        count = 0
+        for i in range(len(X_test)):
+            if p[i] == y_test[i]:
+                count += 1
+
+        print('Dokładność modelu: ', round(count/len(X_test), 2))
+        return clf
+
+    clf = classify_objects()
+    return clf
+
+
 class Digit_prediction():
 
     def predict(self, img):
@@ -191,6 +215,8 @@ class Letter_prediction():
 
     def load_model(self):
         self.clf = pickle.load(open('letter_classifier.sav', 'rb'))
+
+
 
 
 def test_classifiers():
@@ -284,7 +310,11 @@ def Digit_predict(img):
     return D_classifier.predict(img)[0]
 
 if __name__ == '__main__':
-    img = load_image("test_digit/img5.png")
-    print(Digit_predict(img))
+    # img = load_image("test_digit/img5.png")
+    # print(Digit_predict(img))
+
+
+
+
 
 
