@@ -340,8 +340,9 @@ def Object_predict():
         return id_toletter([Letter_predict(img)])
 
 if __name__ == '__main__':
-    # img = load_image("test_digit/img5.png")
-    # print(Digit_predict(img))
+    img = load_image("test_digit/img4.png")
+    print(Digit_predict(img))
+
 
     print(Object_predict())
 
