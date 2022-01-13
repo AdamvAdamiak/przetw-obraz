@@ -219,6 +219,9 @@ class Letter_prediction():
 
 class Object_prediction():
 
+    def __init__(self, model):
+        self.clf = model
+
     def predict(self, img):
         return self.clf.predict(img)
 
@@ -326,11 +329,11 @@ def Letter_predict(img):
     return L_classifier.predict(img)[0]
 
 def Object_predict():
-    object_predict = Object_prediction()
+    object_predict = Object_prediction('')
     object_predict.load_model()
 
-    #img = load_image('test_digit/img2.png')
-    img = load_image('test_letters/imgF.png')
+    img = load_image('test_digit/img5.png')
+    # img = load_image('test_letters/imgA.png')
     prediction = object_predict.predict(img)
 
     if prediction == 0.:
@@ -340,11 +343,14 @@ def Object_predict():
         return id_toletter([Letter_predict(img)])
 
 if __name__ == '__main__':
-    img = load_image("test_digit/img4.png")
-    print(Digit_predict(img))
+    # img = load_image("test_digit/img4.png")
+    # print(Digit_predict(img))
 
 
     print(Object_predict())
+
+    # O_predict = Object_prediction(model=learn_objects())
+    # O_predict.save_model()
 
 
 
