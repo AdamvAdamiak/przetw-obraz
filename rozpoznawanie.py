@@ -269,9 +269,9 @@ def Object_predict(img):
     L_prediction = L_classifier.predict(img)
 
     if D_prediction[1] > L_prediction[1]:
-        return D_prediction
+        return D_prediction[0]
     else:
-        return id_toletter([L_prediction[0]]), L_prediction[1]
+        return id_toletter([L_prediction[0]])
 
 if __name__ == '__main__':
     # img = load_image("test_digit/img4.png")
