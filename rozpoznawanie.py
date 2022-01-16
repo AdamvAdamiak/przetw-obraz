@@ -223,7 +223,7 @@ class Object_prediction():
         self.clf = model
 
     def predict(self, img):
-        return self.clf.predict(img)
+        return self.clf.predict(img), self.clf.predict_proba(img)[0]
 
     def save_model(self):
         pickle.dump(self.clf, open('object_classifier.sav', 'wb'))
@@ -247,10 +247,11 @@ def Letter_predict(img):
     return L_classifier.predict(img)
 
 def Object_predict(img):
-    # object_predict = Object_prediction('')
-    # object_predict.load_model()
-    #
-    # prediction = object_predict.predict(img)
+    object_predict = Object_prediction('')
+    object_predict.load_model()
+
+    prediction = object_predict.predict(img)
+    print(prediction)
     #
     # if prediction == 0.:
     #     print('Recognized as digit:')
@@ -277,8 +278,8 @@ if __name__ == '__main__':
     # img = load_image("test_digit/img4.png")
     # print(Digit_predict(img))
 
-    img = load_image('test_digit/img9.png')
-    # img = load_image('test_letters/imgA.png')
+    # img = load_image('test_digit/img9.png')
+    # img = load_image('test_letters/imgD.png')
 
     print(Object_predict(img))
 
