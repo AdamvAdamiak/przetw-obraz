@@ -196,7 +196,7 @@ def learn_objects(hyp_param = (100,)):
 class Digit_prediction():
 
     def predict(self, img):
-        return self.clf.predict(img)
+        return self.clf.predict(img)[0], max(self.clf.predict_proba(img)[0])
 
     def save_model(self):
         pickle.dump(self.clf, open('digit_classifier.sav', 'wb'))
@@ -208,7 +208,7 @@ class Digit_prediction():
 class Letter_prediction():
 
     def predict(self, img):
-        return self.clf.predict(img)
+        return self.clf.predict(img)[0], max(self.clf.predict_proba(img)[0])
 
     def save_model(self):
         pickle.dump(self.clf, open('letter_classifier.sav', 'wb'))
@@ -223,7 +223,7 @@ class Object_prediction():
         self.clf = model
 
     def predict(self, img):
-        return self.clf.predict(img)
+        return self.clf.predict(img), self.clf.predict_proba(img)[0]
 
     def save_model(self):
         pickle.dump(self.clf, open('object_classifier.sav', 'wb'))
@@ -232,122 +232,56 @@ class Object_prediction():
         self.clf = pickle.load(open('object_classifier.sav', 'rb'))
 
 
-def test_classifiers():
-    start = time()
-
-    digit_predict = Digit_prediction()
-    digit_predict.load_model()
-    # digit_predict = Digit_prediction(model=learn_digits((100,)))
-    # digit_predict.save_model()
-    for i in range(10):
-        path = f'test_digit/img{i}.png'
-        print(path)
-        img = load_image(path, 28)
-        print(digit_predict.predict(img))
-
-    letter_predict = Letter_prediction()
-    letter_predict.load_model()
-    # letter_predict = Letter_prediction(model=learn_letters((260,)))
-    # letter_predict.save_model()
-    for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']:
-        img = load_image('test_letters/img{}.png'.format(letter), 28)
-        prediction = letter_predict.predict(img)
-        if letter == id_toletter(prediction):
-            print(letter, ' success')
-        else:
-            print(letter, ' classified as ', id_toletter(prediction))
-
-    print(round(time()-start, 2), ' s')
-
-
-def validate_classifiers():
-    digit_classifier = Digit_prediction()
-    letter_classifier = Letter_prediction()
-
-    digit_classifier.load_model()
-    letter_classifier.load_model()
-
-    X_valid = np.load('X_valid.npy')
-    y_valid = np.load('y_valid.npy')
-
-    X_validl = np.load('X_validl.npy')
-    y_validl = np.load('y_validl.npy')
-
-    print('Cyfry:')
-    validate_model(digit_classifier, X_valid, y_valid)
-
-    print('')
-
-    print('Litery:')
-    validate_model(letter_classifier, X_validl, y_validl)
-
-
-def validate_model(model, X_valid, y_valid):
-    valid = 0
-    for x_data, y_data in zip(X_valid, y_valid):
-        x_data = x_data.reshape(1, 784)
-        prediction = model.predict(x_data)
-        if prediction == y_data:
-            valid += 1
-
-    print('Dokładność modelu: ', valid/len(X_valid) * 100, '%')
-
-
-def find_best_parameters(X_train, y_train):
-    mlp = MLPClassifier(max_iter=260)
-    parameter_space = {
-        'hidden_layer_sizes': [(260, 260, 260), (130, 260, 130), (260,)],
-        'activation': ['tanh', 'relu'],
-        'solver': ['sgd', 'adam'],
-        'alpha': [0.0001, 0.05],
-        'learning_rate': ['constant', 'adaptive'], }
-    from sklearn.model_selection import GridSearchCV
-
-    clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3)
-    clf.fit(X_train, y_train)
-
-    # Best paramete set
-    print('Best parameters found:\n', clf.best_params_)
-
-    # All results
-    means = clf.cv_results_['mean_test_score']
-    stds = clf.cv_results_['std_test_score']
-    for mean, std, params in zip(means, stds, clf.cv_results_['params']):
-        print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
 
 
 def Digit_predict(img):
     D_classifier = Digit_prediction()
     D_classifier.load_model()
 
-    return D_classifier.predict(img)[0]
+    return D_classifier.predict(img)
 
 def Letter_predict(img):
     L_classifier = Letter_prediction()
     L_classifier.load_model()
 
-    return L_classifier.predict(img)[0]
+    return L_classifier.predict(img)
 
-def Object_predict():
+def Object_predict(img):
     object_predict = Object_prediction('')
     object_predict.load_model()
 
-    img = load_image('test_digit/img5.png')
-    # img = load_image('test_letters/imgA.png')
     prediction = object_predict.predict(img)
+    print(prediction)
+    #
+    # if prediction == 0.:
+    #     print('Recognized as digit:')
+    #     return Digit_predict(img)
+    #
+    # elif prediction == 1:
+    #     print('Recognized as letter:')
+    #     return Letter_predict(img)
 
-    if prediction == 0.:
-        return Digit_predict(img)
+    D_classifier = Digit_prediction()
+    D_classifier.load_model()
+    L_classifier = Letter_prediction()
+    L_classifier.load_model()
 
-    elif prediction == 1:
-        return id_toletter([Letter_predict(img)])
+    D_prediction = D_classifier.predict(img)
+    L_prediction = L_classifier.predict(img)
+
+    if D_prediction[1] > L_prediction[1]:
+        return D_prediction[0]
+    else:
+        return id_toletter([L_prediction[0]])
 
 if __name__ == '__main__':
     # img = load_image("test_digit/img4.png")
     # print(Digit_predict(img))
 
+    # img = load_image('test_digit/img9.png')
+    # img = load_image('test_letters/imgD.png')
 
-    print(Object_predict())
+    print(Object_predict(img))
 
 
     # O_predict = Object_prediction(model=learn_objects())
