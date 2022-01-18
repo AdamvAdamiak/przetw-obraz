@@ -169,7 +169,7 @@ def id_toletter(id):
     return output_letter
 
 
-def learn_objects(hyp_param = (100,)):
+def learn_objects(hyp_param=(100,)):
 
     X_train = np.load('X_traino.npy')
     y_train = np.load('y_traino.npy')
@@ -232,13 +232,12 @@ class Object_prediction():
         self.clf = pickle.load(open('object_classifier.sav', 'rb'))
 
 
-
-
 def Digit_predict(img):
     D_classifier = Digit_prediction()
     D_classifier.load_model()
 
     return D_classifier.predict(img)
+
 
 def Letter_predict(img):
     L_classifier = Letter_prediction()
@@ -246,20 +245,20 @@ def Letter_predict(img):
 
     return L_classifier.predict(img)
 
-def Object_predict(img):
+
+def D_predict(img):
     object_predict = Object_prediction('')
     object_predict.load_model()
 
     prediction = object_predict.predict(img)
-    print(prediction)
-    #
-    # if prediction == 0.:
+    # print(prediction)
+    # if prediction[0] == 0:
     #     print('Recognized as digit:')
     #     return Digit_predict(img)
-    #
-    # elif prediction == 1:
+    
+    # elif prediction[0] == 1:
     #     print('Recognized as letter:')
-    #     return Letter_predict(img)
+    #     return id_toletter(Letter_predict(img))
 
     D_classifier = Digit_prediction()
     D_classifier.load_model()
@@ -274,19 +273,15 @@ def Object_predict(img):
     else:
         return id_toletter([L_prediction[0]])
 
+
 if __name__ == '__main__':
     img = load_image("test_digit/img4.png")
-    # print(Digit_predict(img))
+    print(Digit_predict(img))
 
     # img = load_image('test_digit/img9.png')
     # img = load_image('test_letters/imgD.png')
 
-    print(Object_predict(img))
-
+    # print(D_predict(img))
 
     # O_predict = Object_prediction(model=learn_objects())
     # O_predict.save_model()
-
-
-
-

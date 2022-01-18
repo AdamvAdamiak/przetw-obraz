@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from pickle import load
 import imutils
-from rozpoznawanie import Digit_predict, grayscale_inversion
+from rozpoznawanie import Digit_predict, grayscale_inversion, D_predict
 from PIL import Image
 import numpy as np
 import image_slicer
@@ -50,7 +50,7 @@ def predict_image(name):
         if counts < 700:
             # window = np.array(window)
             # window = window.reshape(1,784)
-            result += str(Digit_predict(window))
+            result += str(D_predict(window))
         clone = image.copy()
         cv2.rectangle(clone, (x, y), (x + winW, y + winH), (0, 255, 0), 2)
         cv2.imshow('show', clone)
