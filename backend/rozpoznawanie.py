@@ -275,7 +275,7 @@ def Object_predict(img):
         return id_toletter([L_prediction[0]])
 
 if __name__ == '__main__':
-    # img = load_image("test_digit/img4.png")
+    img = load_image("test_digit/img4.png")
     # print(Digit_predict(img))
 
     # img = load_image('test_digit/img9.png')
