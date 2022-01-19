@@ -5,7 +5,6 @@ import imutils
 from rozpoznawanie import Digit_predict, grayscale_inversion, D_predict
 from PIL import Image
 import numpy as np
-import image_slicer
 from numpy.lib.stride_tricks import sliding_window_view
 import argparse
 import time

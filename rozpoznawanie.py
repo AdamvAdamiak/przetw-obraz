@@ -250,7 +250,10 @@ def D_predict(img):
     object_predict = Object_prediction('')
     object_predict.load_model()
     prediction = object_predict.predict(img)
-    return prediction
+    if prediction[0] <=9:
+        return prediction[0]
+    else:
+        return id_toletter([prediction[0]])
     # print(prediction)
     # if prediction[0] == 0:
     #     print('Recognized as digit:')
