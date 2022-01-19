@@ -254,14 +254,7 @@ def D_predict(img):
         return prediction[0]
     else:
         return id_toletter([prediction[0]])
-    # print(prediction)
-    # if prediction[0] == 0:
-    #     print('Recognized as digit:')
-    #     return Digit_predict(img)
-    
-    # elif prediction[0] == 1:
-    #     print('Recognized as letter:')
-    #     return id_toletter(Letter_predict(img))
+
 
     # D_classifier = Digit_prediction()
     # D_classifier.load_model()

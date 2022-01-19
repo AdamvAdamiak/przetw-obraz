@@ -61,6 +61,6 @@ def predict_image(name):
 
 # img = load_image("test_digit/img0.png")
 
-print(predict_image('img0.png'))
+print(predict_image('img2.png'))
 
 # print(Digit_predict(img))
