@@ -196,7 +196,7 @@ def learn_objects(hyp_param=(100,)):
 class Digit_prediction():
 
     def predict(self, img):
-        return self.clf.predict(img)[0], max(self.clf.predict_proba(img)[0])
+        return self.clf.predict(img)[0]
 
     def save_model(self):
         pickle.dump(self.clf, open('digit_classifier.sav', 'wb'))
@@ -249,34 +249,17 @@ def Letter_predict(img):
 def D_predict(img,intention='C'):
     object_predict = Object_prediction('')
     object_predict.load_model()
+    prediction = object_predict.predict(img)
 
-    # prediction = object_predict.predict(img)
-    # print(prediction)
-    # if prediction[0] == 0:
-    #     print('Recognized as digit:')
-    #     return Digit_predict(img)
-    
-    # elif prediction[0] == 1:
-    #     print('Recognized as letter:')
-    #     return id_toletter(Letter_predict(img))
-
-    D_classifier = Digit_prediction()
-    D_classifier.load_model()
-    L_classifier = Letter_prediction()
-    L_classifier.load_model()
-
-    D_prediction = D_classifier.predict(img)
-    L_prediction = L_classifier.predict(img)
-
-    if intention =='D':
-        return D_prediction[0]
-    elif intention =='L':
-        return id_toletter([L_prediction[0]])
+    if intention == 'D':
+        return str(prediction[0][0])
+    elif intention == 'L':
+        return id_toletter([prediction[0]])
     else:
-        if D_prediction[1] > L_prediction[1]:
-            return D_prediction[0]
+        if prediction[0][0] <=9:
+            return str(prediction[0][0])
         else:
-            return id_toletter([L_prediction[0]])
+            return id_toletter([prediction[0]])
 
 
 if __name__ == '__main__':
