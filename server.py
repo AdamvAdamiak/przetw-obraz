@@ -1,15 +1,15 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, Response
 from Sliding_window import predict_image
-
+from django.http import HttpResponse
 app = Flask(__name__)
+result = ''
 
 
 @app.route('/upload', methods=['POST', 'GET'])
-def show_user():
+def upload():
     request.files['myfile'].save('uploaded.jpg')
-    print(predict_image('uploaded.jpg'))
-    return redirect('http://127.0.0.1:5500/frontend/index.html')
+    result = predict_image('uploaded.jpg')
+    return Response(str(result))
 
 
 app.run(debug=True)
-

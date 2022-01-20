@@ -250,7 +250,7 @@ def D_predict(img):
     object_predict = Object_prediction('')
     object_predict.load_model()
 
-    prediction = object_predict.predict(img)
+    # prediction = object_predict.predict(img)
     # print(prediction)
     # if prediction[0] == 0:
     #     print('Recognized as digit:')
@@ -267,7 +267,6 @@ def D_predict(img):
 
     D_prediction = D_classifier.predict(img)
     L_prediction = L_classifier.predict(img)
-
     if D_prediction[1] > L_prediction[1]:
         return D_prediction[0]
     else:
@@ -275,8 +274,9 @@ def D_predict(img):
 
 
 if __name__ == '__main__':
-    img = load_image("test_digit/img4.png")
-    print(Digit_predict(img))
+    a = 1
+    # img = load_image("test_digit/img8.png")
+    # print(Digit_predict(img))
 
     # img = load_image('test_digit/img9.png')
     # img = load_image('test_letters/imgD.png')
