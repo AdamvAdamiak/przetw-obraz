@@ -29,7 +29,7 @@ def sliding_window(image, stepSize, windowSize):
             yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
 
 
-def predict_image(name):
+def predict_image(name,intention='C'):
     result = ''
     image = cv2.imread(name, cv2.IMREAD_GRAYSCALE)
     (winW, winH) = (28, 28)
@@ -50,7 +50,7 @@ def predict_image(name):
         if counts < 700:
             # window = np.array(window)
             # window = window.reshape(1,784)
-            result += str(D_predict(window))
+            result += str(D_predict(window,intention))
         clone = image.copy()
         cv2.rectangle(clone, (x, y), (x + winW, y + winH), (0, 255, 0), 2)
         cv2.imshow('show', clone)

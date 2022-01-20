@@ -246,7 +246,7 @@ def Letter_predict(img):
     return L_classifier.predict(img)
 
 
-def D_predict(img):
+def D_predict(img,intention='C'):
     object_predict = Object_prediction('')
     object_predict.load_model()
 
@@ -267,10 +267,16 @@ def D_predict(img):
 
     D_prediction = D_classifier.predict(img)
     L_prediction = L_classifier.predict(img)
-    if D_prediction[1] > L_prediction[1]:
+
+    if intention =='D':
         return D_prediction[0]
-    else:
+    elif intention =='L':
         return id_toletter([L_prediction[0]])
+    else:
+        if D_prediction[1] > L_prediction[1]:
+            return D_prediction[0]
+        else:
+            return id_toletter([L_prediction[0]])
 
 
 if __name__ == '__main__':

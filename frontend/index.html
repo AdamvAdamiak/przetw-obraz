@@ -27,9 +27,22 @@
             margin: auto;
         }
     </style>
-    <form id="uploadbanner" enctype="multipart/form-data" method="post" action="http://127.0.0.1:5000/upload">
+    <p>Klasyfikacja cyfr i liter</p>
+    <form id="uploadbanner" enctype="multipart/form-data" method="post" action="http://127.0.0.1:5000/classify">
         <input id="fileupload" name="myfile" type="file" />
-        <input type="submit" value="submit" id="submit" />
+        <input type="submit" value="Wyślij" id="submit" />
+    </form>
+
+    <p>Klasyfikacja cyfr</p>
+    <form id="uploadbanner" enctype="multipart/form-data" method="post" action="http://127.0.0.1:5000/classifydigit">
+        <input id="fileupload" name="myfile" type="file" />
+        <input type="submit" value="Wyślij" id="submit" />
+    </form>
+
+    <p>Klasyfikacja liter</p>
+    <form id="uploadbanner" enctype="multipart/form-data" method="post" action="http://127.0.0.1:5000/classifyletter">
+        <input id="fileupload" name="myfile" type="file" />
+        <input type="submit" value="Wyślij" id="submit" />
     </form>
 </body>
 
