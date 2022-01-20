@@ -1,21 +1,16 @@
-import json
-from os import path
-from flask import Flask, request, Response, abort, redirect, render_template
-import requests as r
-from werkzeug.wrappers import response
-import numpy as np
+from flask import Flask, request, redirect, Response
+from Sliding_window import predict_image
+from django.http import HttpResponse
 app = Flask(__name__)
+result = ''
 
-REDIRECT_URL = "http://127.0.0.1:5500/frontend/a.html"
 
-class Server: 
-    
-    @app.route('/upload', methods=['GET'])
-    def upload():
-        img = request.args.get('image')
-        print(np.array(img))
-        print(type(img))
-        return redirect(REDIRECT_URL, code=302)
+@app.route('/classify', methods=['POST', 'GET'])
+def classify():
+    request.files['myfile'].save('uploaded.jpg')
+    result = predict_image('uploaded.jpg')
+    print(result)
+    return Response(str(result))
 
-if __name__ == "__main__":
-    app.run()
+
+app.run(debug=True)

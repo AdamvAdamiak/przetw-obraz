@@ -5,6 +5,7 @@ import imutils
 from rozpoznawanie import Digit_predict, grayscale_inversion, D_predict
 from PIL import Image
 import numpy as np
+import image_slicer
 from numpy.lib.stride_tricks import sliding_window_view
 import argparse
 import time
@@ -28,7 +29,7 @@ def sliding_window(image, stepSize, windowSize):
             yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
 
 
-def predict_image(name):
+def predict_image(name,intention='C'):
     result = ''
     image = cv2.imread(name, cv2.IMREAD_GRAYSCALE)
     (winW, winH) = (28, 28)
@@ -49,7 +50,7 @@ def predict_image(name):
         if counts < 700:
             # window = np.array(window)
             # window = window.reshape(1,784)
-            result += str(D_predict(window))
+            result += str(D_predict(window,intention))
         clone = image.copy()
         cv2.rectangle(clone, (x, y), (x + winW, y + winH), (0, 255, 0), 2)
         cv2.imshow('show', clone)
@@ -61,6 +62,6 @@ def predict_image(name):
 
 # img = load_image("test_digit/img0.png")
 
-print(predict_image('img2.png'))
+# print(predict_image('img0.png'))
 
 # print(Digit_predict(img))

@@ -196,7 +196,7 @@ def learn_objects(hyp_param=(100,)):
 class Digit_prediction():
 
     def predict(self, img):
-        return self.clf.predict(img)[0], max(self.clf.predict_proba(img)[0])
+        return self.clf.predict(img)[0]
 
     def save_model(self):
         pickle.dump(self.clf, open('digit_classifier.sav', 'wb'))
@@ -223,7 +223,7 @@ class Object_prediction():
         self.clf = model
 
     def predict(self, img):
-        return self.clf.predict(img)[0], max(self.clf.predict_proba(img)[0])
+        return self.clf.predict(img), self.clf.predict_proba(img)[0]
 
     def save_model(self):
         pickle.dump(self.clf, open('object_classifier.sav', 'wb'))
@@ -246,55 +246,31 @@ def Letter_predict(img):
     return L_classifier.predict(img)
 
 
-def D_predict(img):
+def D_predict(img,intention='C'):
     object_predict = Object_prediction('')
     object_predict.load_model()
     prediction = object_predict.predict(img)
-    if prediction[0] <=9:
-        return prediction[0]
-    else:
+
+    if intention == 'D':
+        return str(prediction[0][0])
+    elif intention == 'L':
         return id_toletter([prediction[0]])
-
-
-    # D_classifier = Digit_prediction()
-    # D_classifier.load_model()
-    # L_classifier = Letter_prediction()
-    # L_classifier.load_model()
-    #
-    # D_prediction = D_classifier.predict(img)
-    # L_prediction = L_classifier.predict(img)
-    #
-    # if D_prediction[1] > L_prediction[1]:
-    #     return D_prediction[0]
-    # else:
-    #     return id_toletter([L_prediction[0]])
+    else:
+        if prediction[0][0] <=9:
+            return str(prediction[0][0])
+        else:
+            return id_toletter([prediction[0]])
 
 
 if __name__ == '__main__':
-    # img = load_image("test_digit/img4.png")
+    a = 1
+    # img = load_image("test_digit/img8.png")
     # print(Digit_predict(img))
 
-    img = load_image('test_digit/img8.png')
+    # img = load_image('test_digit/img9.png')
     # img = load_image('test_letters/imgD.png')
 
-    print(D_predict(img))
+    # print(D_predict(img))
 
-    # O_predict = Object_prediction(model=learn_objects((512,128)))
+    # O_predict = Object_prediction(model=learn_objects())
     # O_predict.save_model()
-
-    # X_valid = np.load('X_train.npy')
-    # y_valid = np.load('y_train.npy')
-    #
-    # X_validl = np.load('X_trainl.npy')
-    # y_validl = np.load('y_trainl.npy')
-    #
-    #
-    # X_object = np.concatenate((X_valid, X_validl))
-    # y_object = np.concatenate((y_valid, y_validl))
-    # X_traino, X_testo, y_traino, y_testo = train_test_split(X_object, y_object, test_size=0.2)
-    #
-    # np.save('X_traino.npy', X_traino)
-    # np.save('X_testo.npy', X_testo)
-    # np.save('y_traino.npy', y_traino)
-    # np.save('y_testo.npy', y_testo)
-
