@@ -46,11 +46,13 @@ def predict_image(name,intention='C'):
         window = window.resize(size=(28, 28))
         window = load_image(window)
         window_list = list(window[0])
-        counts = window_list.count(0)
-        if counts < 700:
+        black_pixels = window_list.count(0)
+        if black_pixels < 700 or black_pixels == 0:
             # window = np.array(window)
             # window = window.reshape(1,784)
             result += str(D_predict(window,intention))
+        else:
+            result += ' '
         clone = image.copy()
         cv2.rectangle(clone, (x, y), (x + winW, y + winH), (0, 255, 0), 2)
         cv2.imshow('show', clone)
